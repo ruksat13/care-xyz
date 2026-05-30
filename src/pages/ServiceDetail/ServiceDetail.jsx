@@ -1,4 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import services from "../../data/services";
 import useAuth from "../../hooks/useAuth";
 import { FaStar, FaCheckCircle, FaArrowLeft } from "react-icons/fa";
@@ -29,6 +30,11 @@ const ServiceDetail = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-12">
+            <Helmet>
+                <title>{service.title} | Care.xyz</title>
+                <meta name="description" content={service.short_description} />
+            </Helmet>
+
             <div className="max-w-5xl mx-auto px-4">
                 {/* Back Button */}
                 <button
