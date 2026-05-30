@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import services from "../../data/services";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser";
 
 const divisions = ["Dhaka", "Chittagong", "Rajshahi", "Khulna", "Barisal", "Sylhet", "Rangpur", "Mymensingh"];
 
@@ -77,7 +78,27 @@ const Booking = () => {
         existing.push(bookingData);
         localStorage.setItem("bookings", JSON.stringify(existing));
 
-        toast.success("Booking confirmed!");
+        // Send email invoice
+        try {
+            await emailjs.send(
+                import.meta.env.VITE_EMAILJS_SERVICE_ID,
+                import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+                {
+                    to_name: user.displayName || "Valued Customer",
+                    to_email: user.email,
+                    service_name: service.title,
+                    duration: `${durationValue} ${durationType}`,
+                    location: `${area}, ${district}, ${division}`,
+                    total_cost: `৳${totalCost}`,
+                },
+                import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+            );
+            toast.success("Booking confirmed! Invoice sent to your email.");
+        } catch (err) {
+            console.error("Email error:", err);
+            toast.success("Booking confirmed!");
+        }
+
         setLoading(false);
         navigate("/my-bookings");
     };
@@ -131,7 +152,6 @@ const Booking = () => {
                         <div className="bg-gray-50 rounded-xl p-6">
                             <h3 className="text-lg font-semibold text-gray-700 mb-4">Step 2: Select Location</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Division */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Division</label>
                                     <select
@@ -145,7 +165,6 @@ const Booking = () => {
                                     </select>
                                 </div>
 
-                                {/* District */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
                                     <select
@@ -160,7 +179,6 @@ const Booking = () => {
                                     </select>
                                 </div>
 
-                                {/* City */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
                                     <select
@@ -174,7 +192,6 @@ const Booking = () => {
                                     </select>
                                 </div>
 
-                                {/* Area */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Area</label>
                                     <input
@@ -188,7 +205,6 @@ const Booking = () => {
                                 </div>
                             </div>
 
-                            {/* Full Address */}
                             <div className="mt-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Full Address</label>
                                 <textarea
