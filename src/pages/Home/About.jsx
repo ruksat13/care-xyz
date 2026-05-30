@@ -15,7 +15,7 @@ const About = () => {
                     {/* Image */}
                     <div className="relative">
                         <img
-                            src="https://i.ibb.co/6RtqY3K/elderly-care.jpg"
+                            src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=600&auto=format&fit=crop"
                             alt="About Care.xyz"
                             className="rounded-2xl shadow-xl w-full object-cover h-96"
                         />
